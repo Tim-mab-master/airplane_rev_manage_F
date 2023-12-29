@@ -106,6 +106,12 @@ export default {
   methods: {
     updateProfile() {
       alert("Your data: " + JSON.stringify(this.para));
+      this.$emit('childClick');
+      console.log("lsjdfs");
+    },
+    handleClick() {
+      // 触发自定义事件
+      
     },
     // 跳出通知
   //   notifyVue(verticalAlign, horizontalAlign) {
