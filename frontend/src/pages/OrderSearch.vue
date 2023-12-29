@@ -137,7 +137,7 @@
 
             console.log("24");
             // console.log(this.postData);
-            axios.post('http://34.80.114.185:5000/get_order', this.postData)
+            axios.post('http://34.125.243.130:5000/get_order', this.postData)
             .then(res => {
             // 请求成功时更新数据
               this.tableData = [];
@@ -161,7 +161,7 @@
                 console.error('请求失败：', error);
             });
 
-            axios.post('http://34.80.114.185:5000/get_cancel_order', this.postData)
+            axios.post('http://34.125.243.130:5000/get_cancel_order', this.postData)
             .then(res => {
             // 请求成功时更新数据
               this.tableData2 = [];

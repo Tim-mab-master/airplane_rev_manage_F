@@ -88,7 +88,7 @@ const tableColumns = [
   //       'PCV': 59851.851851851854,
   //       'RFM': '5'
 const tableData = [];
-axios.get('http://34.80.114.185:5000/get_customer_info')
+axios.get('http://34.125.243.130:5000/get_customer_info')
         .then(res => {
           // handle the response data
           for(let i = 0; i < res.data.customer_info.length; i++) {
@@ -118,7 +118,7 @@ axios.get('http://34.80.114.185:5000/get_customer_info')
           console.error('Error fetching data:', error);
         });
         const retention_rate = [];
-        axios.get('http://34.80.114.185:5000/get_retention_rate')
+        axios.get('http://34.125.243.130:5000/get_retention_rate')
         .then(res => {
           // handle the response data
           retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0);
@@ -140,7 +140,7 @@ axios.get('http://34.80.114.185:5000/get_customer_info')
         });
 
         const survival_rate = [];
-        axios.get('http://34.80.114.185:5000/get_survival_rate')
+        axios.get('http://34.125.243.130:5000/get_survival_rate')
         .then(res => {
           // handle the response data
           survival_rate.push(Number(res.data.survival_rate["2023_Q1"])|| 0);

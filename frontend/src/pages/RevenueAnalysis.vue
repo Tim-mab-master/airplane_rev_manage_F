@@ -171,16 +171,16 @@ export default {
      
       pastRevChart: {
         data: {
-          labels: [
-            "2023 Q1",
-            "2023 Q2",
-            "2023 Q3",
-            "2023 Q4",
-          ],
-          series: [
+          // labels: [
+          //   "2023 Q1",
+          //   "2023 Q2",
+          //   "2023 Q3",
+          //   "2023 Q4",
+          // ],
+          series: 
             [...past_rev],
             // [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795],
-          ],
+          
         },
         options: {
           seriesBarDistance: 10,
@@ -192,16 +192,16 @@ export default {
       },
       salesRateChart: {
         data: {
-          labels: [
-          "2023 Q1",
-            "2023 Q2",
-            "2023 Q3",
-            "2023 Q4",
-          ],
-          series: [
+          // labels: [
+          // "2023 Q1",
+          //   "2023 Q2",
+          //   "2023 Q3",
+          //   "2023 Q4",
+          // ],
+          series: 
             [...survival_rate],
             // [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795],
-          ],
+          
         },
         options: {
           seriesBarDistance: 10,
@@ -245,8 +245,8 @@ export default {
     submit(duration){
       console.log("Clicked Submit with duration:", duration);
 
-      // this.getPastRev(duration);
-      // this.getSalesRate(duration);
+      this.getPastRev(duration);
+      this.getSalesRate(duration);
       
     },
 
@@ -255,25 +255,34 @@ export default {
       this.postData.time = duration;
       const past_rev = [];
         // 感覺是後端出問題
-        axios.post('http://34.80.114.185:5000/past_revenue',this.postData)
+        axios.post('http://34.125.243.130:5000/past_revenue',this.postData)
         .then(res => {
           // handle the response data
 
           //時間維度所帶來的 x 長度 （季 = 4; 月 = 12）
-          let time_len = res.data.past_rev.length;
+          const pastRev = res.data.past_rev;
+          let time_len = pastRev.length;
+          console.log(time_len);
+          console.log(this.pastRevChart.data.labels);
 
           if(time_len == 4){
-            this.pastRevChart.data.labels = this.season_labels;
+            this.pastRevChart.data.labels = [
+            "2023 Q1",
+            "2023 Q2",
+            "2023 Q3",
+            "2023 Q4",
+            ];
           }else{
             this.pastRevChart.data.labels = this.month_labels;
           }
-
+          console.log(this.pastRevChart.data.labels);
           for(let i = 0; i < time_len; i++) {
             past_rev.push(Number(res.data.past_rev[i])|| 0);
             
           }
-          this.pastRevChart.data.series = [[...past_rev]];
-          console.log(this.tableData);
+          this.pastRevChart.data.series = [...past_rev];
+          console.log("pastSeries");
+          console.log(this.pastRevChart.data.series);
          
           console.log(res.data);
           console.log(past_rev);
@@ -289,12 +298,13 @@ export default {
       this.postData.time = duration;
       const sales_rate = [];
         // 感覺是後端出問題
-        axios.post('http://34.80.114.185:5000/get_sales_rate',this.postData)
+        axios.post('http://34.125.243.130:5000/get_sales_rate',this.postData)
         .then(res => {
           // handle the response data
 
           //時間維度所帶來的 x 長度 （季 = 4; 月 = 12）
-          let time_len = res.data.past_rev.length;
+          const salesRate = res.data.sales_rate_list;
+          let time_len = salesRate.length;
 
           if(time_len == 4){
             this.salesRateChart.data.labels = this.season_labels;
@@ -306,11 +316,11 @@ export default {
             sales_rate.push(Number(res.data.sales_rate_list[i])|| 0);
             
           }
-          this.salesRateChart.data.series = [[...sales_rate]];
-          console.log(this.tableData);
+          this.salesRateChart.data.series = [...sales_rate];
+          // console.log(this.tableData);
          
-          console.log(res.data);
-          console.log(sales_rate);
+          // console.log(res.data);
+          // console.log(sales_rate);
         })
         .catch(error => {
           // handle errors
@@ -321,8 +331,8 @@ export default {
     //
   },
   mounted(){
-    // this.getPastRev("季");
-    // this.getSalesRate("季");
+    this.getPastRev("季");
+    this.getSalesRate("季");
 
     // this.fetchData();
   },
