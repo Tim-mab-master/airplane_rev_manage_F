@@ -114,6 +114,32 @@ import { PaperTable } from "@/components";
 import axios from 'axios';
 const past_rev =[];
 const survival_rate =[];
+const labels= [
+            "2023 Q1",
+            "2023 Q2",
+            "2023 Q3",
+            "2023 Q4",
+      ];
+const season_labels= [
+            "2023 Q1",
+            "2023 Q2",
+            "2023 Q3",
+            "2023 Q4",
+      ];
+const  month_labels= [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+      ];
 
 export default {
   components: {
@@ -136,16 +162,17 @@ export default {
       },
 
       region_rank: {
-        r1:"",
-        r2:"",
-        r3:"",
-        r4:"",
-        r5:"",
+        r1:"台北市",
+        r2:"新北市",
+        r3:"台南市",
+        r4:"高雄市",
+        r5:"台中市",
 
       },
       //下拉式選單相關
       id: null,
       duration: "",
+      
       season_labels: [
             "2023 Q1",
             "2023 Q2",
@@ -171,14 +198,10 @@ export default {
      
       pastRevChart: {
         data: {
-          // labels: [
-          //   "2023 Q1",
-          //   "2023 Q2",
-          //   "2023 Q3",
-          //   "2023 Q4",
-          // ],
+          labels: [...labels],
           series: 
-            [...past_rev],
+            // [...past_rev],
+            [[33200, 29300, 38000, 48000]],
             // [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795],
           
         },
@@ -192,15 +215,15 @@ export default {
       },
       salesRateChart: {
         data: {
-          // labels: [
-          // "2023 Q1",
-          //   "2023 Q2",
-          //   "2023 Q3",
-          //   "2023 Q4",
-          // ],
+          labels: [
+          "2023 Q1",
+            "2023 Q2",
+            "2023 Q3",
+            "2023 Q4",
+          ],
           series: 
-            [...survival_rate],
-            // [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795],
+            // [...survival_rate],
+            [[0.03, 0.019, 0.028, 0.05]],
           
         },
         options: {
@@ -220,8 +243,8 @@ export default {
       },
       regionRankChart: {
         data: {
-          labels: ["56%", "29%", "6%", "6%", "3%"],
-          series: [56, 29, 6, 6, 3],
+          labels: ["36%", "24%", "26%", "11%", "3%"],
+          series: [36, 24, 26, 11, 3],
         },
         options: {},
       },
@@ -244,9 +267,22 @@ export default {
         },
     submit(duration){
       console.log("Clicked Submit with duration:", duration);
+      this.pastRevChart.data.labels = ["1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",];
+      this.pastRevChart.data.series = [[11200, 19300, 8000, 9000, 7200, 6300, 8000, 9200, 7200, 9300, 8000, 6500]];
 
-      this.getPastRev(duration);
-      this.getSalesRate(duration);
+      // this.getPastRev(duration);
+      // this.getSalesRate(duration);
       
     },
 
@@ -254,6 +290,7 @@ export default {
     getPastRev(duration){
       this.postData.time = duration;
       const past_rev = [];
+    
         // 感覺是後端出問題
         axios.post('http://34.125.243.130:5000/past_revenue',this.postData)
         .then(res => {
@@ -263,19 +300,16 @@ export default {
           const pastRev = res.data.past_rev;
           let time_len = pastRev.length;
           console.log(time_len);
-          console.log(this.pastRevChart.data.labels);
-
+          
           if(time_len == 4){
-            this.pastRevChart.data.labels = [
-            "2023 Q1",
-            "2023 Q2",
-            "2023 Q3",
-            "2023 Q4",
-            ];
+            this.$set(this.pastRevChart.data.labels, 'labels', season_labels);
+            // labels = season_labels;
+            
           }else{
-            this.pastRevChart.data.labels = this.month_labels;
+            this.$set(this.pastRevChart.data.labels, 'labels', month_labels);
           }
-          console.log(this.pastRevChart.data.labels);
+
+          console.log(labels);
           for(let i = 0; i < time_len; i++) {
             past_rev.push(Number(res.data.past_rev[i])|| 0);
             
@@ -331,8 +365,8 @@ export default {
     //
   },
   mounted(){
-    this.getPastRev("季");
-    this.getSalesRate("季");
+    // this.getPastRev("季");
+    // this.getSalesRate("季");
 
     // this.fetchData();
   },

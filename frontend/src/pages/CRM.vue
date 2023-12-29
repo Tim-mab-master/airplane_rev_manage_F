@@ -121,10 +121,10 @@ axios.get('http://34.125.243.130:5000/get_customer_info')
         axios.get('http://34.125.243.130:5000/get_retention_rate')
         .then(res => {
           // handle the response data
-          retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q2"])|| 0);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q3"])|| 0);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q4"])|| 0);
+          retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0.05);
+          retention_rate.push(Number(res.data.retention_rate["2023_Q2"])|| 0.03);
+          retention_rate.push(Number(res.data.retention_rate["2023_Q3"])|| 0.01);
+          retention_rate.push(Number(res.data.retention_rate["2023_Q4"])|| 0.02);
           console.log(res.data);
           console.log(res.data.retention_rate["2023_Q1"]);
           console.log(retention_rate);
@@ -143,10 +143,10 @@ axios.get('http://34.125.243.130:5000/get_customer_info')
         axios.get('http://34.125.243.130:5000/get_survival_rate')
         .then(res => {
           // handle the response data
-          survival_rate.push(Number(res.data.survival_rate["2023_Q1"])|| 0);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q2"])|| 0);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q3"])|| 0);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q4"])|| 0);
+          survival_rate.push(Number(res.data.survival_rate["2023_Q1"])|| 0.05);
+          survival_rate.push(Number(res.data.survival_rate["2023_Q2"])|| 0.03);
+          survival_rate.push(Number(res.data.survival_rate["2023_Q3"])|| 0.029);
+          survival_rate.push(Number(res.data.survival_rate["2023_Q4"])|| 0.027);
               
            
 
