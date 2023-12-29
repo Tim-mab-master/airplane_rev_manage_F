@@ -65,7 +65,7 @@
         <div class="col-6">
           <chart-card
           title="艙位收益分析"
-          :chart-data="preferencesChart.data"
+          :chart-data="classRankChart.data"
           chart-type="Pie"
           >
           
@@ -82,16 +82,16 @@
         <div class="col-6">
           <chart-card
           title="地區收益貢獻度分析"
-          :chart-data="preferencesChart.data"
+          :chart-data="regionRankChart.data"
           chart-type="Pie"
           >
         
           <div slot="legend">
-            <i class="fa fa-circle text-info"></i> A
-            <i class="fa fa-circle text-danger"></i> B
-            <i class="fa fa-circle text-warning"></i> C
-            <i class="fa fa-circle text-primary"></i> D
-            <i class="fa fa-circle text-success"></i> E
+            <i class="fa fa-circle text-info"></i> {{ region_rank.r1 }}
+            <i class="fa fa-circle text-danger"></i> {{ region_rank.r2 }}
+            <i class="fa fa-circle text-warning"></i> {{ region_rank.r3 }}
+            <i class="fa fa-circle text-primary"></i> {{ region_rank.r4 }}
+            <i class="fa fa-circle text-success"></i> {{ region_rank.r5 }}
             <i class="fa fa-circle text-muted"></i> 其他
           </div>
           </chart-card>
@@ -133,6 +133,15 @@ export default {
     return {
       postData: {
         time: '',
+      },
+
+      region_rank: {
+        r1:"",
+        r2:"",
+        r3:"",
+        r4:"",
+        r5:"",
+
       },
       //下拉式選單相關
       id: null,
@@ -202,7 +211,14 @@ export default {
           height: "245px",
         },
       },
-      preferencesChart: {
+      classRankChart: {
+        data: {
+          labels: ["56%", "29%", "6%", "6%", "3%"],
+          series: [56, 29, 6, 6, 3],
+        },
+        options: {},
+      },
+      regionRankChart: {
         data: {
           labels: ["56%", "29%", "6%", "6%", "3%"],
           series: [56, 29, 6, 6, 3],
@@ -229,10 +245,12 @@ export default {
     submit(duration){
       console.log("Clicked Submit with duration:", duration);
 
-      this.getPastRev(duration);
+      // this.getPastRev(duration);
+      // this.getSalesRate(duration);
       
     },
 
+    // 取得過去收益
     getPastRev(duration){
       this.postData.time = duration;
       const past_rev = [];
@@ -264,12 +282,48 @@ export default {
           // handle errors
           console.error('Error fetching data:', error);
         });
-    }
+    },
+
+    // 取得售票率
+    getSalesRate(duration){
+      this.postData.time = duration;
+      const sales_rate = [];
+        // 感覺是後端出問題
+        axios.post('http://34.80.114.185:5000/get_sales_rate',this.postData)
+        .then(res => {
+          // handle the response data
+
+          //時間維度所帶來的 x 長度 （季 = 4; 月 = 12）
+          let time_len = res.data.past_rev.length;
+
+          if(time_len == 4){
+            this.salesRateChart.data.labels = this.season_labels;
+          }else{
+            this.salesRateChart.data.labels = this.month_labels;
+          }
+
+          for(let i = 0; i < time_len; i++) {
+            sales_rate.push(Number(res.data.sales_rate_list[i])|| 0);
+            
+          }
+          this.salesRateChart.data.series = [[...sales_rate]];
+          console.log(this.tableData);
+         
+          console.log(res.data);
+          console.log(sales_rate);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
 
     //
   },
   mounted(){
-    // this.getPastRev("月");
+    // this.getPastRev("季");
+    // this.getSalesRate("季");
+
     // this.fetchData();
   },
 };
