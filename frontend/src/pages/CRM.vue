@@ -40,6 +40,16 @@
       <div class="row">
         <div class="col-12">
         <card :title="table1.title">
+          <span> 排序依據： </span>
+          <select v-model="value" placeholder="請選擇排序依據"  style="border: 0px solid #fffcf5;width:470px;" class="form-control" @change="handleOrderChange">
+              <option
+                v-for="item in options"
+                :key="item"
+                :label="item"
+                :value="item"           
+                >
+              </option>
+            </select>
           <div slot="raw-content" class="table-responsive">
             <paper-table :data="table1.data" :columns="table1.columns">
             </paper-table>
@@ -61,6 +71,9 @@
 <script>
 import { StatsCard, ChartCard } from "@/components/index";
 // import Chartist from "chartist";
+import 'element-ui/lib/theme-chalk/index.css';
+
+import { Option, Select, Button } from 'element-ui';
 import { PaperTable } from "@/components";
 import axios from 'axios';
 const tableColumns = [
@@ -87,7 +100,7 @@ const tableColumns = [
   //       'LTV': 54069.74752117492,
   //       'PCV': 59851.851851851854,
   //       'RFM': '5'
-const tableData = [];
+let tableData = [];
 // axios.get('http://34.125.243.130:5000/get_customer_info')
 //         .then(res => {
 //           // handle the response data
@@ -118,27 +131,26 @@ const tableData = [];
 //           console.error('Error fetching data:', error);
 //         });
         let retention_rate = [];
-        // axios.get('http://34.125.243.130:5000/get_retention_rate')
-        // .then(res => {
-        //   // handle the response data
-        //   retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0.05);
-        //   retention_rate.push(Number(res.data.retention_rate["2023_Q2"])|| 0.03);
-        //   retention_rate.push(Number(res.data.retention_rate["2023_Q3"])|| 0.01);
-        //   retention_rate.push(Number(res.data.retention_rate["2023_Q4"])|| 0.02);
-        //   console.log(res.data);
-        //   console.log(res.data.retention_rate["2023_Q1"]);
-        //   console.log(retention_rate);
-           
-
+        axios.get('http://34.125.243.130:5000/get_retention_rate')
+        .then(res => {
+          // handle the response data
+          retention_rate = [];
+          retention_rate.push(res.data.retention_rate[0]["2023 Q1"]);
+          retention_rate.push(res.data.retention_rate[1]["2023 Q2"]);
+          retention_rate.push(res.data.retention_rate[2]["2023 Q3"]);
+          retention_rate.push(res.data.retention_rate[3]["2023 Q4"]);
+          console.log(res.data);
+      
+          // this.retentionChart.data.series[0] = [...retention_rate];
          
-        //   // console.log(res.data);
-        //   console.log();
-        // })
-        // .catch(error => {
-        //   // handle errors
-        //   console.error('Error fetching data:', error);
-        // });
-
+         
+          // console.log(res.data);
+          console.log();
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
         const survival_rate = [];
         axios.get('http://34.125.243.130:5000/get_survival_rate')
         .then(res => {
@@ -164,13 +176,21 @@ export default {
     StatsCard,
     ChartCard,
     PaperTable,
+    Option,
+    Select,
   },
   /**
    * Chart data used to render stats, charts. Should be replaced with server data
    */
   data() {
     return {
-      
+      options: [
+       "ID",
+       "LTV",
+       "PCV",
+       
+      ],
+      value: "ID",
       table1: {
           title: "顧客資訊",
           subTitle: "",
@@ -226,10 +246,20 @@ export default {
     };
   },
   methods: {
+    handleOrderChange(){
+      if(this.value == "LTV"){
+        this.fetchData_LTV();
+      } else if(this.value == "PCV"){
+        this.fetchData_PCV();
+      } else{
+        this.fetchData_ID();
+      }
+    },
     fetchData(){
       axios.get('http://34.125.243.130:5000/get_customer_info')
         .then(res => {
           // handle the response data
+          tableData = [];
           for(let i = 0; i < res.data.customer_info.length; i++) {
                 const inputData = {};
                 inputData.customerid = res.data.customer_info[i].CustomerID;
@@ -257,6 +287,104 @@ export default {
           console.error('Error fetching data:', error);
         });
     },
+    fetchData_LTV(){
+      axios.get('http://34.125.243.130:5000/LTV_order')
+        .then(res => {
+          // handle the response data
+          tableData = [];
+          for(let i = 0; i < res.data.cust_info_LTV_Ordered.length; i++) {
+                const inputData = {};
+                inputData.customerid = res.data.cust_info_LTV_Ordered[i].CustomerID;
+                inputData.customer_name = res.data.cust_info_LTV_Ordered[i].Customer_name;
+                inputData.gender = res.data.cust_info_LTV_Ordered[i].Gender;
+                inputData.phonenumber = res.data.cust_info_LTV_Ordered[i].PhoneNumber;
+                inputData.birthday = res.data.cust_info_LTV_Ordered[i].Birthday;
+                inputData.email = res.data.cust_info_LTV_Ordered[i].Email;
+                inputData.address = res.data.cust_info_LTV_Ordered[i].Address;
+                inputData.ltv = res.data.cust_info_LTV_Ordered[i].LTV;
+                inputData.pcv = res.data.cust_info_LTV_Ordered[i].PCV;
+                inputData.rfm = res.data.cust_info_LTV_Ordered[i].RFM;
+
+
+                tableData.push(inputData);
+              
+           }
+           this.table1.data = [...tableData];
+         
+          // console.log(res.data);
+          // console.log(tableData);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
+    fetchData_PCV(){
+      axios.get('http://34.125.243.130:5000/PCV_order')
+        .then(res => {
+          // handle the response data
+          tableData = [];
+          for(let i = 0; i < res.data.cust_info_PCV_Ordered.length; i++) {
+                const inputData = {};
+                inputData.customerid = res.data.cust_info_PCV_Ordered[i].CustomerID;
+                inputData.customer_name = res.data.cust_info_PCV_Ordered[i].Customer_name;
+                inputData.gender = res.data.cust_info_PCV_Ordered[i].Gender;
+                inputData.phonenumber = res.data.cust_info_PCV_Ordered[i].PhoneNumber;
+                inputData.birthday = res.data.cust_info_PCV_Ordered[i].Birthday;
+                inputData.email = res.data.cust_info_PCV_Ordered[i].Email;
+                inputData.address = res.data.cust_info_PCV_Ordered[i].Address;
+                inputData.ltv = res.data.cust_info_PCV_Ordered[i].LTV;
+                inputData.pcv = res.data.cust_info_PCV_Ordered[i].PCV;
+                inputData.rfm = res.data.cust_info_PCV_Ordered[i].RFM;
+
+
+                tableData.push(inputData);
+              
+           }
+           this.table1.data = [...tableData];
+         
+          // console.log(res.data);
+          // console.log(tableData);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
+
+    fetchData_ID(){
+      axios.get('http://34.125.243.130:5000/ID_order')
+        .then(res => {
+          // handle the response data
+          tableData = [];
+          for(let i = 0; i < res.data.cust_info_ID_Ordered.length; i++) {
+                const inputData = {};
+                inputData.customerid = res.data.cust_info_ID_Ordered[i].CustomerID;
+                inputData.customer_name = res.data.cust_info_ID_Ordered[i].Customer_name;
+                inputData.gender = res.data.cust_info_ID_Ordered[i].Gender;
+                inputData.phonenumber = res.data.cust_info_ID_Ordered[i].PhoneNumber;
+                inputData.birthday = res.data.cust_info_ID_Ordered[i].Birthday;
+                inputData.email = res.data.cust_info_ID_Ordered[i].Email;
+                inputData.address = res.data.cust_info_ID_Ordered[i].Address;
+                inputData.ltv = res.data.cust_info_ID_Ordered[i].LTV;
+                inputData.pcv = res.data.cust_info_ID_Ordered[i].PCV;
+                inputData.rfm = res.data.cust_info_ID_Ordered[i].RFM;
+
+
+                tableData.push(inputData);
+              
+           }
+           this.table1.data = [...tableData];
+         
+          // console.log(res.data);
+          // console.log(tableData);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
+
     fetchData2() {
       axios.get('http://34.125.243.130:5000/get_retention_rate')
         .then(res => {
@@ -289,7 +417,7 @@ export default {
   },
   mounted(){
     this.fetchData();
-    this.fetchData2();
+    // this.fetchData2();
     this.$forceUpdate();
   },
 };

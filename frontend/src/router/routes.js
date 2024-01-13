@@ -15,6 +15,7 @@ import LeftSeatSearch from "@/pages/LeftSeatSearch.vue";
 import ParameterSet from "@/pages/ParameterSet.vue";
 import CRM from "@/pages/CRM.vue";
 import RevenueAnalysis from "@/pages/RevenueAnalysis.vue";
+import CustomerOrder from "@/pages/CustomerOrder.vue";
 
 const routes = [
   {
@@ -81,6 +82,11 @@ const routes = [
         path: "left-seat-search",
         name: "left-seat-search",
         component: LeftSeatSearch,
+      },
+      {
+        path: "customer-order",
+        name: "customer-order",
+        component: CustomerOrder,
       },
     ],
   },
