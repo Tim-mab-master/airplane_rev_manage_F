@@ -10,6 +10,7 @@
           icon="ti-view-list-alt"
         />
         <sidebar-link to="/crm" name="顧客關係管理" icon="ti-face-smile" />
+        <sidebar-link to="/left-seat-search" name="剩餘機位查詢" icon="ti-search" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/maps" name="Map" icon="ti-map" />
         <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />

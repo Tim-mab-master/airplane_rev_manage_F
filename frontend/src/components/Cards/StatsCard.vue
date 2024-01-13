@@ -24,6 +24,10 @@ export default {
   components: {
     Card,
   },
+  mounted() {
+
+    this.$forceUpdate();
+  },
 };
 </script>
 <style></style>

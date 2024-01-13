@@ -88,66 +88,66 @@ const tableColumns = [
   //       'PCV': 59851.851851851854,
   //       'RFM': '5'
 const tableData = [];
-axios.get('http://34.125.243.130:5000/get_customer_info')
-        .then(res => {
-          // handle the response data
-          for(let i = 0; i < res.data.customer_info.length; i++) {
-                const inputData = {};
-                inputData.customerid = res.data.customer_info[i].CustomerID;
-                inputData.customer_name = res.data.customer_info[i].Customer_name;
-                inputData.gender = res.data.customer_info[i].Gender;
-                inputData.phonenumber = res.data.customer_info[i].PhoneNumber;
-                inputData.birthday = res.data.customer_info[i].Birthday;
-                inputData.email = res.data.customer_info[i].Email;
-                inputData.address = res.data.customer_info[i].Address;
-                inputData.ltv = res.data.customer_info[i].LTV;
-                inputData.pcv = res.data.customer_info[i].PCV;
-                inputData.rfm = res.data.customer_info[i].RFM;
+// axios.get('http://34.125.243.130:5000/get_customer_info')
+//         .then(res => {
+//           // handle the response data
+//           for(let i = 0; i < res.data.customer_info.length; i++) {
+//                 const inputData = {};
+//                 inputData.customerid = res.data.customer_info[i].CustomerID;
+//                 inputData.customer_name = res.data.customer_info[i].Customer_name;
+//                 inputData.gender = res.data.customer_info[i].Gender;
+//                 inputData.phonenumber = res.data.customer_info[i].PhoneNumber;
+//                 inputData.birthday = res.data.customer_info[i].Birthday;
+//                 inputData.email = res.data.customer_info[i].Email;
+//                 inputData.address = res.data.customer_info[i].Address;
+//                 inputData.ltv = res.data.customer_info[i].LTV;
+//                 inputData.pcv = res.data.customer_info[i].PCV;
+//                 inputData.rfm = res.data.customer_info[i].RFM;
 
 
-                tableData.push(inputData);
+//                 tableData.push(inputData);
               
-           }
-
+//            }
+//            this.table1.data = [...tableData];
          
-          // console.log(res.data);
-          console.log(tableData);
-        })
-        .catch(error => {
-          // handle errors
-          console.error('Error fetching data:', error);
-        });
-        const retention_rate = [];
-        axios.get('http://34.125.243.130:5000/get_retention_rate')
-        .then(res => {
-          // handle the response data
-          retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0.05);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q2"])|| 0.03);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q3"])|| 0.01);
-          retention_rate.push(Number(res.data.retention_rate["2023_Q4"])|| 0.02);
-          console.log(res.data);
-          console.log(res.data.retention_rate["2023_Q1"]);
-          console.log(retention_rate);
+//           // console.log(res.data);
+//           console.log(tableData);
+//         })
+//         .catch(error => {
+//           // handle errors
+//           console.error('Error fetching data:', error);
+//         });
+        let retention_rate = [];
+        // axios.get('http://34.125.243.130:5000/get_retention_rate')
+        // .then(res => {
+        //   // handle the response data
+        //   retention_rate.push(Number(res.data.retention_rate["2023_Q1"])|| 0.05);
+        //   retention_rate.push(Number(res.data.retention_rate["2023_Q2"])|| 0.03);
+        //   retention_rate.push(Number(res.data.retention_rate["2023_Q3"])|| 0.01);
+        //   retention_rate.push(Number(res.data.retention_rate["2023_Q4"])|| 0.02);
+        //   console.log(res.data);
+        //   console.log(res.data.retention_rate["2023_Q1"]);
+        //   console.log(retention_rate);
            
 
          
-          // console.log(res.data);
-          console.log();
-        })
-        .catch(error => {
-          // handle errors
-          console.error('Error fetching data:', error);
-        });
+        //   // console.log(res.data);
+        //   console.log();
+        // })
+        // .catch(error => {
+        //   // handle errors
+        //   console.error('Error fetching data:', error);
+        // });
 
         const survival_rate = [];
         axios.get('http://34.125.243.130:5000/get_survival_rate')
         .then(res => {
           // handle the response data
-          survival_rate.push(Number(res.data.survival_rate["2023_Q1"])|| 0.05);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q2"])|| 0.03);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q3"])|| 0.029);
-          survival_rate.push(Number(res.data.survival_rate["2023_Q4"])|| 0.027);
-              
+          survival_rate.push(Number(res.data.survival_rate[0]["2023 Q1"]));
+          survival_rate.push(Number(res.data.survival_rate[1]["2023 Q2"]));
+          survival_rate.push(Number(res.data.survival_rate[2]["2023 Q3"]));
+          survival_rate.push(Number(res.data.survival_rate[3]["2023 Q4"]));
+          console.log(survival_rate);
            
 
           // console.log(res.data);
@@ -190,7 +190,7 @@ export default {
           series: [
             [...retention_rate],
             // [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795],
-          ],
+        ],
         },
         options: {
           seriesBarDistance: 10,
@@ -226,10 +226,71 @@ export default {
     };
   },
   methods: {
+    fetchData(){
+      axios.get('http://34.125.243.130:5000/get_customer_info')
+        .then(res => {
+          // handle the response data
+          for(let i = 0; i < res.data.customer_info.length; i++) {
+                const inputData = {};
+                inputData.customerid = res.data.customer_info[i].CustomerID;
+                inputData.customer_name = res.data.customer_info[i].Customer_name;
+                inputData.gender = res.data.customer_info[i].Gender;
+                inputData.phonenumber = res.data.customer_info[i].PhoneNumber;
+                inputData.birthday = res.data.customer_info[i].Birthday;
+                inputData.email = res.data.customer_info[i].Email;
+                inputData.address = res.data.customer_info[i].Address;
+                inputData.ltv = res.data.customer_info[i].LTV;
+                inputData.pcv = res.data.customer_info[i].PCV;
+                inputData.rfm = res.data.customer_info[i].RFM;
+
+
+                tableData.push(inputData);
+              
+           }
+           this.table1.data = [...tableData];
+         
+          // console.log(res.data);
+          // console.log(tableData);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
+    fetchData2() {
+      axios.get('http://34.125.243.130:5000/get_retention_rate')
+        .then(res => {
+          // handle the response data
+          retention_rate = [];
+          retention_rate.push(res.data.retention_rate[0]["2023 Q1"]);
+          retention_rate.push(res.data.retention_rate[1]["2023 Q2"]);
+          retention_rate.push(res.data.retention_rate[2]["2023 Q3"]);
+          retention_rate.push(res.data.retention_rate[3]["2023 Q4"]);
+          console.log(res.data);
+          console.log(res.data.retention_rate[0]["2023 Q1"]);
+          console.log(retention_rate);
+          console.log("retention_rate");
+          // this.retentionChart.data.series[0] = [...retention_rate];
+          this.$set(this.retentionChart.data, 'series', [[...retention_rate]]);
+         
+
+          console.log(this.retentionChart.data.series[0]);
+         
+          // console.log(res.data);
+          console.log();
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+        // this.retentionChart.data.series[0] = [...retention_rate];
+    },
     
   },
   mounted(){
-    // this.fetchData();
+    this.fetchData();
+    this.fetchData2();
+    this.$forceUpdate();
   },
 };
 </script>

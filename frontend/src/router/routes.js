@@ -11,6 +11,7 @@ import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import OrderSearch from "@/pages/OrderSearch.vue";
+import LeftSeatSearch from "@/pages/LeftSeatSearch.vue";
 import ParameterSet from "@/pages/ParameterSet.vue";
 import CRM from "@/pages/CRM.vue";
 import RevenueAnalysis from "@/pages/RevenueAnalysis.vue";
@@ -75,6 +76,11 @@ const routes = [
         path: "order-search",
         name: "order-search",
         component: OrderSearch,
+      },
+      {
+        path: "left-seat-search",
+        name: "left-seat-search",
+        component: LeftSeatSearch,
       },
     ],
   },

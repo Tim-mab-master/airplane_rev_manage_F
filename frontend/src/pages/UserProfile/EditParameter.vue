@@ -93,8 +93,8 @@ export default {
     return {
       para: {
         date: "",
-        demand: "",
-        not_show_rate: "",
+        demand: null,
+        not_show_rate: null,
         flight_id: "MM620",
       },
       type: ["", "info", "success", "warning", "danger"],
@@ -106,12 +106,27 @@ export default {
   methods: {
     updateProfile() {
       alert("Your data: " + JSON.stringify(this.para));
-      this.$emit('childClick');
-      console.log("lsjdfs");
+      const date_string = this.formatDateString(this.para.date);
+      this.$emit('childClick', { date: date_string, demand: this.para.demand,  not_show_rate: this.para.not_show_rate});
+      console.log(date_string);
     },
     handleClick() {
       // 触发自定义事件
       
+    },
+    formatDateString(inputDateString) {
+      // 创建 Date 对象
+      const dateObject = new Date(inputDateString);
+
+      // 获取年、月、日
+      const year = dateObject.getFullYear();
+      const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需要加1
+      const day = String(dateObject.getDate()).padStart(2, '0');
+
+      // 格式化为字符串
+      const formattedDateString = `${year}-${month}-${day}`;
+
+      return formattedDateString;
     },
     // 跳出通知
   //   notifyVue(verticalAlign, horizontalAlign) {
