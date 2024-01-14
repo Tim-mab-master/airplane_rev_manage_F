@@ -161,7 +161,9 @@ export default {
     },
     handleDateChange() {
       // 触发自定义事件
+      console.log(this.para.date);
       this.depart_date = this.formatDateString(this.para.date);
+      console.log(this.depart_date);
       axios.post('http://34.125.243.130:5000/booking_flight_info', {depart_date: this.depart_date})
             .then(res => {
             // 请求成功时更新数据

@@ -94,10 +94,11 @@
           const day = String(dateObject.getDate()).padStart(2, '0');
 
           // 格式化为字符串
-          const formattedDateString = `${year}-${month}-${day}`;
+          const formattedDateString = `${year}/${month}/${day}`;
 
           return formattedDateString;
         },
+
         // 跳出通知
         notifyVue(verticalAlign, horizontalAlign) {
             const color = Math.floor(Math.random() * 4 + 1);
@@ -112,11 +113,11 @@
         submit() {
             this.postData.flight_code = "MM620";
             // 之後記得把日期加上去
-            this.postData.date = this.flight_date;
+            this.postData.date = this.formatDateString(this.flight_date);
             // this.postData.flight_id = "1";
-            // this.postData.date = "2023/1/1";
+            // this.postData.date = "2023/12/25";
 
-            console.log( this.postData);
+            console.log(this.postData);
             // console.log(this.postData);
             axios.post('http://34.125.243.130:5000/get_left_seat', this.postData)
             .then(res => {
