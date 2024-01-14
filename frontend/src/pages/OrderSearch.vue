@@ -135,7 +135,7 @@
             // this.postData.flight_id = "1";
             // this.postData.date = "2023/1/1";
 
-            console.log("24");
+            console.log(this.postData.date);
             // console.log(this.postData);
             axios.post('http://34.125.243.130:5000/get_order', this.postData)
             .then(res => {

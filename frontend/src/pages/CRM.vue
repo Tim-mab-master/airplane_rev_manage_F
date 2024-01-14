@@ -61,6 +61,18 @@
       </div>
       </div>
       
+      <!-- rfm 表格  -->
+      <div class="row">
+        <div class="col-12">
+        <card :title="table2.title">
+          <div slot="raw-content" class="table-responsive">
+            <paper-table :data="table2.data" :columns="table2.columns">
+            </paper-table>
+          </div>
+          
+        </card>
+      </div>
+      </div>
 
      
 
@@ -89,6 +101,14 @@ const tableColumns = [
     "RFM",
 
   ];
+  const tableColumns2 = [
+    "Classfication",
+    "Recency",
+    "Frequency",
+    "Monetary",
+    "Percentage_of_People",
+    "Percentage_of_Revenue",
+  ];
 
   // 'CustomerID': 1,
   //       'Customer_name': 'yen chen',
@@ -101,6 +121,7 @@ const tableColumns = [
   //       'PCV': 59851.851851851854,
   //       'RFM': '5'
 let tableData = [];
+let tableData2 = [];
 // axios.get('http://34.125.243.130:5000/get_customer_info')
 //         .then(res => {
 //           // handle the response data
@@ -197,6 +218,12 @@ export default {
           columns: [...tableColumns],
           data: [...tableData],
         },
+      table2: {
+          title: "RFM 分析結果",
+          subTitle: "",
+          columns: [...tableColumns2],
+          data: [...tableData2],
+      },
       
      
       retentionChart: {
@@ -287,6 +314,57 @@ export default {
           console.error('Error fetching data:', error);
         });
     },
+
+    // 載入 RFM 資料
+    fetchData_RFM () {
+      axios.get('http://34.125.243.130:5000/RFM')
+        .then(res => {
+          // handle the response data
+          tableData2 = [];
+         
+                let inputData = {};
+                inputData.classfication = "黃金客";
+                inputData.recency = res.data.RFM_info.import_customer.recency;
+                inputData.frequency = res.data.RFM_info.import_customer.frequency;
+                inputData.monetary = res.data.RFM_info.import_customer.monetary;
+                inputData.percentage_of_people = res.data.RFM_info.import_customer.num_rate;
+                inputData.percentage_of_revenue = res.data.RFM_info.import_customer.revenue_rate;
+
+                tableData2.push(inputData);
+
+                inputData = {};
+                inputData.classfication = "一般客";
+                inputData.recency = res.data.RFM_info.general_customer.recency;
+                inputData.frequency = res.data.RFM_info.general_customer.frequency;
+                inputData.monetary = res.data.RFM_info.general_customer.monetary;
+                inputData.percentage_of_people = res.data.RFM_info.general_customer.num_rate;
+                inputData.percentage_of_revenue = res.data.RFM_info.general_customer.revenue_rate;
+
+                tableData2.push(inputData);
+
+                inputData = {};
+                inputData.classfication = "沈睡客";
+                inputData.recency = res.data.RFM_info.sleeping_customer.recency;
+                inputData.frequency = res.data.RFM_info.sleeping_customer.frequency;
+                inputData.monetary = res.data.RFM_info.sleeping_customer.monetary;
+                inputData.percentage_of_people = res.data.RFM_info.sleeping_customer.num_rate;
+                inputData.percentage_of_revenue = res.data.RFM_info.sleeping_customer.revenue_rate;
+
+                tableData2.push(inputData);
+
+
+
+           this.table2.data = [...tableData2];
+         
+          // console.log(res.data);
+          // console.log(tableData);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
+
     fetchData_LTV(){
       axios.get('http://34.125.243.130:5000/LTV_order')
         .then(res => {
@@ -413,12 +491,28 @@ export default {
         });
         // this.retentionChart.data.series[0] = [...retention_rate];
     },
+
+    fetchDataCusEq () {
+      axios.get('http://34.125.243.130:5000/CE')
+        .then(res => {
+          // handle the response data
+          
+         this.customer_equity = res.data['customer equity'][0]['customer equity'];
+          console.log(res.data);
+        })
+        .catch(error => {
+          // handle errors
+          console.error('Error fetching data:', error);
+        });
+    },
     
   },
   mounted(){
     this.fetchData();
     // this.fetchData2();
     this.$forceUpdate();
+    this.fetchDataCusEq();
+    this.fetchData_RFM();
   },
 };
 </script>
