@@ -42,7 +42,7 @@
             <i class="ti-check"></i> Data information certified
           </span> -->
           <div slot="legend">
-            <i class="fa fa-circle text-info"></i> 過去收益
+            <i class="fa fa-circle text-info"></i> 預估收益
           </div>
         </chart-card>
         </div>
